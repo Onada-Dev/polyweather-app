@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolyWeather</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e17;
+      --bg-secondary: #111827;
+      --bg-card: #1a2236;
+      --bg-card-hover: #1f2942;
+      --border: #2a3550;
+      --border-accent: #3b82f6;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-violet: #8b5cf6;
+      --gradient-hero: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #10b981 100%);
+      --gradient-subtle: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(6,182,212,0.08) 100%);
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    nav .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    nav .logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav .logo span {
+      font-weight: 400;
+      opacity: 0.7;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      letter-spacing: 0.01em;
+    }
+
+    nav a:hover { color: var(--text-primary); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(6,182,212,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(16,185,129,0.05) 0%, transparent 50%);
+      animation: drift 20s ease-in-out infinite;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(2%, -1%) rotate(1deg); }
+      66% { transform: translate(-1%, 2%) rotate(-1deg); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent-blue);
+      margin-bottom: 2rem;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent-emerald);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 .gradient {
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat .value {
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+    }
+
+    .hero-stat .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.25rem;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      line-height: 1.8;
+    }
+
+    /* ── THESIS SECTION ── */
+    .thesis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .thesis-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .thesis-card:hover {
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .thesis-card .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .thesis-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .thesis-card p {
+      color: var(--text-secondary);
+      font-size: 0.925rem;
+      line-height: 1.7;
+    }
+
+    .icon-blue { background: rgba(59,130,246,0.15); }
+    .icon-cyan { background: rgba(6,182,212,0.15); }
+    .icon-emerald { background: rgba(16,185,129,0.15); }
+    .icon-amber { background: rgba(245,158,11,0.15); }
+
+    /* ── PIPELINE SECTION ── */
+    .pipeline {
+      position: relative;
+    }
+
+    .pipeline-step {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .pipeline-step:last-child { margin-bottom: 0; }
+
+    .step-marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-line {
+      width: 2px;
+      flex: 1;
+      margin-top: 0.75rem;
+      border-radius: 1px;
+    }
+
+    .pipeline-step:last-child .step-line { display: none; }
+
+    .step-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    .step-content h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .step-content .step-sub {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .step-content p {
+      color: var(--text-secondary);
+      font-size: 0.925rem;
+      line-height: 1.7;
+    }
+
+    .step-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .step-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      background: rgba(59,130,246,0.1);
+      color: var(--accent-blue);
+      border: 1px solid rgba(59,130,246,0.15);
+    }
+
+    .step-tag.green {
+      background: rgba(16,185,129,0.1);
+      color: var(--accent-emerald);
+      border-color: rgba(16,185,129,0.15);
+    }
+
+    .step-tag.amber {
+      background: rgba(245,158,11,0.1);
+      color: var(--accent-amber);
+      border-color: rgba(245,158,11,0.15);
+    }
+
+    .step-tag.violet {
+      background: rgba(139,92,246,0.1);
+      color: var(--accent-violet);
+      border-color: rgba(139,92,246,0.15);
+    }
+
+    .s1 .step-number { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+    .s1 .step-line { background: linear-gradient(to bottom, var(--accent-blue), var(--accent-cyan)); }
+    .s2 .step-number { background: rgba(6,182,212,0.15); color: var(--accent-cyan); }
+    .s2 .step-line { background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-emerald)); }
+    .s3 .step-number { background: rgba(16,185,129,0.15); color: var(--accent-emerald); }
+    .s3 .step-line { background: linear-gradient(to bottom, var(--accent-emerald), var(--accent-amber)); }
+    .s4 .step-number { background: rgba(245,158,11,0.15); color: var(--accent-amber); }
+    .s4 .step-line { background: linear-gradient(to bottom, var(--accent-amber), var(--accent-violet)); }
+    .s5 .step-number { background: rgba(139,92,246,0.15); color: var(--accent-violet); }
+
+    /* ── ARCHITECTURE ── */
+    .arch-diagram {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .arch-diagram .layer {
+      margin-bottom: 0.5rem;
+    }
+
+    .arch-diagram .highlight { color: var(--accent-cyan); }
+    .arch-diagram .dim { color: var(--text-muted); }
+    .arch-diagram .green { color: var(--accent-emerald); }
+    .arch-diagram .amber { color: var(--accent-amber); }
+    .arch-diagram .blue { color: var(--accent-blue); }
+    .arch-diagram .violet { color: var(--accent-violet); }
+    .arch-diagram .rose { color: var(--accent-rose); }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .stack-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+
+    .stack-item .stack-cat {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .stack-item .stack-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .stack-item .stack-detail {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ── RISK & AUTOMATION ── */
+    .risk-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .risk-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+
+    .risk-card h4 {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .risk-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(42,53,80,0.5);
+    }
+
+    .risk-row:last-child { border-bottom: none; }
+
+    .risk-row .risk-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .risk-row .risk-value {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .risk-value.green { color: var(--accent-emerald); }
+    .risk-value.amber { color: var(--accent-amber); }
+    .risk-value.rose { color: var(--accent-rose); }
+    .risk-value.blue { color: var(--accent-blue); }
+
+    /* ── AUTOMATION ── */
+    .auto-timeline {
+      position: relative;
+      padding-left: 2rem;
+      border-left: 2px solid var(--border);
+    }
+
+    .auto-event {
+      position: relative;
+      margin-bottom: 2.5rem;
+      padding-left: 2rem;
+    }
+
+    .auto-event:last-child { margin-bottom: 0; }
+
+    .auto-event::before {
+      content: '';
+      position: absolute;
+      left: -2.55rem;
+      top: 0.5rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-blue);
+      background: var(--bg-primary);
+    }
+
+    .auto-event .auto-time {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      margin-bottom: 0.25rem;
+    }
+
+    .auto-event h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .auto-event p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── ECONOMICS ── */
+    .econ-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .econ-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    .econ-block h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    .econ-block ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .econ-block li {
+      padding: 0.6rem 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      border-bottom: 1px solid rgba(42,53,80,0.4);
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .econ-block li:last-child { border-bottom: none; }
+
+    .econ-block li::before {
+      content: '>';
+      font-family: var(--mono);
+      color: var(--accent-emerald);
+      flex-shrink: 0;
+    }
+
+    .econ-note {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.15);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .econ-note strong { color: var(--accent-amber); }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem 2rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 2;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+
+    .code-block .comment { color: var(--text-muted); }
+    .code-block .keyword { color: var(--accent-violet); }
+    .code-block .fn { color: var(--accent-blue); }
+    .code-block .string { color: var(--accent-emerald); }
+    .code-block .number { color: var(--accent-amber); }
+    .code-block .op { color: var(--accent-cyan); }
+
+    /* ── ROADMAP ── */
+    .roadmap-phases {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .phase-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phase-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .phase-card.phase-current::before { background: var(--accent-blue); }
+    .phase-card.phase-next::before { background: var(--accent-cyan); }
+    .phase-card.phase-future::before { background: var(--accent-emerald); }
+
+    .phase-card .phase-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .phase-current .phase-label { color: var(--accent-blue); }
+    .phase-next .phase-label { color: var(--accent-cyan); }
+    .phase-future .phase-label { color: var(--accent-emerald); }
+
+    .phase-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .phase-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .phase-card li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 0.35rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .phase-card li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .phase-current li::before { background: var(--accent-blue); }
+    .phase-next li::before { background: var(--accent-cyan); }
+    .phase-future li::before { background: var(--accent-emerald); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 4rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer .footer-links {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--accent-blue); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .thesis-grid, .risk-grid, .econ-columns, .stack-grid, .roadmap-phases {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stats { gap: 2rem; }
+
+      nav ul { display: none; }
+
+      section { padding: 4rem 1.5rem; }
+
+      .pipeline-step { grid-template-columns: 48px 1fr; gap: 1rem; }
+    }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">polyweather<span>.sys</span></div>
+    <ul>
+      <li><a href="#thesis">Thesis</a></li>
+      <li><a href="#pipeline">Pipeline</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#risk">Risk</a></li>
+      <li><a href="#automation">Automation</a></li>
+      <li><a href="#economics">Economics</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ────────── HERO ────────── -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">System Design Brief</div>
+    <h1>Weather forecasts.<br><span class="gradient">Prediction markets.</span><br>Latency edge.</h1>
+    <p class="hero-sub">
+      An autonomous trading system that exploits the gap between meteorological model updates
+      and prediction market repricing. Fully automated, risk-managed, paper-traded first.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="value">4</div>
+        <div class="label">Weather Models</div>
+      </div>
+      <div class="hero-stat">
+        <div class="value">5min</div>
+        <div class="label">Signal Loop</div>
+      </div>
+      <div class="hero-stat">
+        <div class="value">100+</div>
+        <div class="label">Min Edge (bps)</div>
+      </div>
+      <div class="hero-stat">
+        <div class="value">$250</div>
+        <div class="label">Daily Loss Cap</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── THESIS ────────── -->
+<div class="divider"></div>
+<section id="thesis">
+  <div class="section-header fade-in">
+    <div class="section-label">// 01 &mdash; thesis</div>
+    <h2>The Information Asymmetry</h2>
+    <p class="section-desc">
+      Prediction markets like Polymarket list weather-outcome contracts &mdash; "Will NYC exceed 95&deg;F on July 4th?"
+      These markets are priced by participants with varying access to forecast data.
+      The system's premise is simple: better forecast data, processed faster, creates edge.
+    </p>
+  </div>
+
+  <div class="thesis-grid fade-in">
+    <div class="thesis-card">
+      <div class="icon icon-blue">&#9729;</div>
+      <h3>Multi-Model Ensemble</h3>
+      <p>
+        Ingests GFS, ECMWF, ICON, and HRRR model outputs simultaneously. Ensemble consensus
+        produces a more accurate fair probability than any single model or human intuition.
+        Model disagreement itself is a signal &mdash; high disagreement lowers confidence.
+      </p>
+    </div>
+    <div class="thesis-card">
+      <div class="icon icon-cyan">&#9201;</div>
+      <h3>Forecast-to-Market Latency</h3>
+      <p>
+        Weather models update on fixed schedules (hourly to 6-hourly). Markets reprice
+        on participant reaction time. The delta between "model publishes updated probability" and
+        "market reflects it" is the window. The system watches that window continuously.
+      </p>
+    </div>
+    <div class="thesis-card">
+      <div class="icon icon-emerald">&#9878;</div>
+      <h3>Transparent Edge Calculation</h3>
+      <p>
+        No black-box ML. Fair probability is derived from forecast ensemble means, adjusted for
+        model disagreement, threshold distance, and revision direction. Every signal includes
+        a reason code. Every rejection is logged. Fully auditable.
+      </p>
+    </div>
+    <div class="thesis-card">
+      <div class="icon icon-amber">&#9888;</div>
+      <h3>Paper-First, Always</h3>
+      <p>
+        Live trading is disabled by default and requires explicit opt-in.
+        The system runs paper trades with conservative fill simulation &mdash; fills at the ask,
+        accounts for partial fills and liquidity. Prove edge in paper, then consider live.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── PIPELINE ────────── -->
+<div class="divider"></div>
+<section id="pipeline">
+  <div class="section-header fade-in">
+    <div class="section-label">// 02 &mdash; data pipeline</div>
+    <h2>From Forecast to Fill</h2>
+    <p class="section-desc">
+      Five stages, each running on its own loop. Data flows in one direction.
+      Every stage persists its output to Postgres for auditability and backtesting.
+    </p>
+  </div>
+
+  <div class="pipeline fade-in">
+    <div class="pipeline-step s1">
+      <div class="step-marker">
+        <div class="step-number">01</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <h3>Market Discovery</h3>
+        <div class="step-sub">run_market_scan &middot; periodic</div>
+        <p>
+          Scans Polymarket's CLOB API for active weather-related contracts. Parses market titles
+          to extract city, variable type (temp, precip, wind), threshold values, and operators.
+          Persists each market with its ERC-20 YES/NO token metadata.
+        </p>
+        <div class="step-tags">
+          <span class="step-tag">Polymarket CLOB API</span>
+          <span class="step-tag green">Market normalization</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pipeline-step s2">
+      <div class="step-marker">
+        <div class="step-number">02</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <h3>Forecast Ingestion</h3>
+        <div class="step-sub">run_forecast_poll &middot; ~hourly</div>
+        <p>
+          For each tracked market location, fetches forecasts from Open-Meteo (GFS, ECMWF, ICON) and
+          NOAA (HRRR, GFS). Raw payloads are preserved. The normalizer computes deltas between
+          consecutive snapshots &mdash; tracking how forecasts shift over time and how far values
+          sit from market thresholds.
+        </p>
+        <div class="step-tags">
+          <span class="step-tag">Open-Meteo API</span>
+          <span class="step-tag">NOAA Weather API</span>
+          <span class="step-tag amber">Delta tracking</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pipeline-step s3">
+      <div class="step-marker">
+        <div class="step-number">03</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <h3>Signal Generation</h3>
+        <div class="step-sub">run_signal_loop &middot; ~5 min</div>
+        <p>
+          The LatencyHunter strategy computes fair probability from the forecast ensemble, compares
+          it to the current market-implied probability, and calculates edge in basis points. Signals
+          are generated with a direction (BUY_YES, BUY_NO, or HOLD), confidence score, and explicit
+          reason code.
+        </p>
+        <div class="code-block">
+<span class="comment"># fair probability derivation</span>
+<span class="keyword">fair_p</span> <span class="op">=</span> <span class="fn">ensemble_mean</span>(models)
+       <span class="op">+</span> <span class="fn">disagreement_adj</span>(model_spread)
+       <span class="op">+</span> <span class="fn">threshold_adj</span>(distance_to_threshold)
+       <span class="op">+</span> <span class="fn">revision_adj</span>(forecast_delta_direction)
+
+<span class="keyword">edge_bps</span> <span class="op">=</span> (fair_p <span class="op">-</span> market_p) <span class="op">*</span> <span class="number">10_000</span>
+        </div>
+        <div class="step-tags">
+          <span class="step-tag violet">LatencyHunterV1</span>
+          <span class="step-tag">Confidence scoring</span>
+          <span class="step-tag green">Reason codes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pipeline-step s4">
+      <div class="step-marker">
+        <div class="step-number">04</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <h3>Risk Gate</h3>
+        <div class="step-sub">inline &middot; per-signal</div>
+        <p>
+          Every approved signal passes through the risk manager before execution.
+          Checks daily loss limits, total exposure, per-market concentration, spread width,
+          data freshness, and market close proximity. Any rule violation rejects the trade
+          and logs a RiskEvent.
+        </p>
+        <div class="step-tags">
+          <span class="step-tag amber">5 rule categories</span>
+          <span class="step-tag">Position limits</span>
+          <span class="step-tag">Data freshness</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pipeline-step s5">
+      <div class="step-marker">
+        <div class="step-number">05</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <h3>Execution & P&L</h3>
+        <div class="step-sub">run_paper_trader &middot; on signal</div>
+        <p>
+          Paper executor simulates conservative fills &mdash; buys fill at the ask, not mid.
+          Partial fills modeled against available liquidity. Positions are tracked per-market
+          per-outcome with realized and unrealized P&L. The P&L engine marks to market continuously
+          and produces daily reports.
+        </p>
+        <div class="step-tags">
+          <span class="step-tag green">Conservative fills</span>
+          <span class="step-tag">FIFO cost basis</span>
+          <span class="step-tag violet">Daily reporting</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── ARCHITECTURE ────────── -->
+<div class="divider"></div>
+<section id="architecture">
+  <div class="section-header fade-in">
+    <div class="section-label">// 03 &mdash; architecture</div>
+    <h2>System Architecture</h2>
+    <p class="section-desc">
+      Clean separation between adapters, services, and strategies.
+      Every layer is independently testable. Database is the single source of truth.
+    </p>
+  </div>
+
+  <div class="arch-diagram fade-in">
+    <div class="layer"><span class="dim">┌──────────────────────────────────────────────────────────────────────┐</span></div>
+    <div class="layer"><span class="dim">│</span>  <span class="blue">EXTERNAL</span>    Open-Meteo &middot; NOAA &middot; Polymarket CLOB &middot; Polymarket WS    <span class="dim">│</span></div>
+    <div class="layer"><span class="dim">└───────────────────────────────┬──────────────────────────────────────┘</span></div>
+    <div class="layer"><span class="dim">                                │</span></div>
+    <div class="layer"><span class="dim">┌───────────────────────────────┴──────────────────────────────────────┐</span></div>
+    <div class="layer"><span class="dim">│</span>  <span class="highlight">ADAPTERS</span>    openmeteo_client &middot; noaa_client &middot; polymarket_client &middot; ws  <span class="dim">│</span></div>
+    <div class="layer"><span class="dim">└───────────────────────────────┬──────────────────────────────────────┘</span></div>
+    <div class="layer"><span class="dim">                                │</span></div>
+    <div class="layer"><span class="dim">┌───────────────────────────────┴──────────────────────────────────────┐</span></div>
+    <div class="layer"><span class="dim">│</span>  <span class="green">SERVICES</span>    forecast_poller &middot; market_scanner &middot; price_listener       <span class="dim">│</span></div>
+    <div class="layer"><span class="dim">│</span>              signal_engine &middot; risk_manager &middot; paper_executor &middot; pnl      <span class="dim">│</span></div>
+    <div class="layer"><span class="dim">└───────────────────────────────┬──────────────────────────────────────┘</span></div>
+    <div class="layer"><span class="dim">                                │</span></div>
+    <div class="layer"><span class="dim">┌───────────────────────────────┴──────────────────────────────────────┐</span></div>
+    <div class="layer"><span class="dim">│</span>  <span class="violet">STRATEGIES</span>  LatencyHunterV1  (pluggable &mdash; swap or extend)            <span class="dim">│</span></div>
+    <div class="layer"><span class="dim">└───────────────────────────────┬──────────────────────────────────────┘</span></div>
+    <div class="layer"><span class="dim">                                │</span></div>
+    <div class="layer"><span class="dim">┌───────────────────────────────┴──────────────────────────────────────┐</span></div>
+    <div class="layer"><span class="dim">│</span>  <span class="amber">PERSISTENCE</span> PostgreSQL 16 &middot; SQLAlchemy 2.0 &middot; Alembic migrations     <span class="dim">│</span></div>
+    <div class="layer"><span class="dim">└──────────────────────────────────────────────────────────────────────┘</span></div>
+    <div class="layer">&nbsp;</div>
+    <div class="layer"><span class="dim">┌──────────────────────────────────────────────────────────────────────┐</span></div>
+    <div class="layer"><span class="dim">│</span>  <span class="rose">API</span>         FastAPI &middot; read-only &middot; /health /markets /signals /positions<span class="dim">│</span></div>
+    <div class="layer"><span class="dim">└──────────────────────────────────────────────────────────────────────┘</span></div>
+  </div>
+
+  <div class="stack-grid fade-in">
+    <div class="stack-item">
+      <div class="stack-cat">Runtime</div>
+      <div class="stack-name">Python 3.11</div>
+      <div class="stack-detail">Async-first with httpx and FastAPI</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-cat">Framework</div>
+      <div class="stack-name">FastAPI 0.118</div>
+      <div class="stack-detail">ASGI via Uvicorn, Pydantic v2 schemas</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-cat">Database</div>
+      <div class="stack-name">PostgreSQL 16</div>
+      <div class="stack-detail">SQLAlchemy 2.0 ORM + Alembic migrations</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-cat">Data Sources</div>
+      <div class="stack-name">Open-Meteo + NOAA</div>
+      <div class="stack-detail">GFS, ECMWF, ICON, HRRR models</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-cat">Market</div>
+      <div class="stack-name">Polymarket CLOB</div>
+      <div class="stack-detail">REST + WebSocket price feeds</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-cat">Infrastructure</div>
+      <div class="stack-name">Docker Compose</div>
+      <div class="stack-detail">App + Postgres + Redis (future)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── RISK ────────── -->
+<div class="divider"></div>
+<section id="risk">
+  <div class="section-header fade-in">
+    <div class="section-label">// 04 &mdash; risk management</div>
+    <h2>Conservative by Default</h2>
+    <p class="section-desc">
+      Every signal passes through the risk gate before execution. Five rule categories,
+      all configurable, all defaulting to conservative values. Live trading is disabled by default.
+    </p>
+  </div>
+
+  <div class="risk-grid fade-in">
+    <div class="risk-card">
+      <h4>Exposure Limits</h4>
+      <div class="risk-row">
+        <span class="risk-label">Daily realized loss cap</span>
+        <span class="risk-value rose">$250</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Total open exposure</span>
+        <span class="risk-value amber">$1,500</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Per-market exposure</span>
+        <span class="risk-value amber">$300</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Per-order size</span>
+        <span class="risk-value blue">$100</span>
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <h4>Market Quality</h4>
+      <div class="risk-row">
+        <span class="risk-label">Max spread</span>
+        <span class="risk-value amber">300 bps</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Min liquidity</span>
+        <span class="risk-value blue">$10</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Close buffer</span>
+        <span class="risk-value green">30 min</span>
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <h4>Data Freshness</h4>
+      <div class="risk-row">
+        <span class="risk-label">Forecast staleness</span>
+        <span class="risk-value blue">&lt; 120 min</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Price staleness</span>
+        <span class="risk-value blue">&lt; 120 sec</span>
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <h4>Signal Quality</h4>
+      <div class="risk-row">
+        <span class="risk-label">Min edge required</span>
+        <span class="risk-value green">100 bps</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Min confidence</span>
+        <span class="risk-value green">0.60</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Live trading</span>
+        <span class="risk-value rose">DISABLED</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── AUTOMATION ────────── -->
+<div class="divider"></div>
+<section id="automation">
+  <div class="section-header fade-in">
+    <div class="section-label">// 05 &mdash; automation</div>
+    <h2>Runs Itself</h2>
+    <p class="section-desc">
+      Five independent job loops, containerized with Docker Compose, orchestrated by cron
+      or a lightweight scheduler. Once configured, the system discovers markets, ingests forecasts,
+      generates signals, and paper-trades without human intervention.
+    </p>
+  </div>
+
+  <div class="auto-timeline fade-in">
+    <div class="auto-event">
+      <div class="auto-time">every 6 hours</div>
+      <h4>Market Scanner</h4>
+      <p>
+        Discovers new weather contracts on Polymarket. Parses market metadata,
+        extracts locations and thresholds, persists to the markets table. Old markets
+        are deactivated when contracts close.
+      </p>
+    </div>
+    <div class="auto-event">
+      <div class="auto-time">every 60 minutes</div>
+      <h4>Forecast Poller</h4>
+      <p>
+        Fetches latest model runs from Open-Meteo and NOAA for all tracked locations.
+        Normalizes, computes deltas, flags significant changes. Keeps raw payloads for audit.
+      </p>
+    </div>
+    <div class="auto-event">
+      <div class="auto-time">every 5 minutes</div>
+      <h4>Signal Loop</h4>
+      <p>
+        Evaluates all active markets against latest forecast and price data.
+        Runs LatencyHunterV1 strategy, generates signals with direction, edge, and confidence.
+        Only APPROVED signals proceed.
+      </p>
+    </div>
+    <div class="auto-event">
+      <div class="auto-time">on approved signal</div>
+      <h4>Paper Trader</h4>
+      <p>
+        Receives approved signals, runs risk checks, simulates execution.
+        Updates positions, records fills, tracks P&L. All in paper mode until
+        explicitly toggled.
+      </p>
+    </div>
+    <div class="auto-event">
+      <div class="auto-time">daily at 00:00 UTC</div>
+      <h4>Report Generator</h4>
+      <p>
+        Aggregates daily trades, P&L, win rate, risk events. Exposes via
+        <code>/reports/daily</code> API endpoint. Future: push to Slack or email.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── ECONOMICS ────────── -->
+<div class="divider"></div>
+<section id="economics">
+  <div class="section-header fade-in">
+    <div class="section-label">// 06 &mdash; economics</div>
+    <h2>Path to Passive Income</h2>
+    <p class="section-desc">
+      The system is designed to run autonomously once validated. Here's the honest breakdown
+      of what makes this viable and what the open questions are.
+    </p>
+  </div>
+
+  <div class="econ-columns fade-in">
+    <div class="econ-block">
+      <h3>Why This Can Work</h3>
+      <ul>
+        <li>Weather forecasts are freely available, high-quality numerical data &mdash; not rumors or sentiment</li>
+        <li>Prediction markets are still inefficient; most participants trade on vibes, not ensemble models</li>
+        <li>Polymarket weather markets have real volume but limited sophisticated competition</li>
+        <li>The edge is structural: forecast models update on fixed schedules, humans reprice slowly</li>
+        <li>Operating cost is near zero &mdash; Docker container on a $5-20/mo VPS, free API data sources</li>
+        <li>Strategy is pluggable &mdash; LatencyHunterV1 is the first strategy, not the last</li>
+        <li>Conservative risk limits mean the system survives its own mistakes during learning</li>
+        <li>Backtest framework provides evidence before real capital deployment</li>
+      </ul>
+    </div>
+    <div class="econ-block">
+      <h3>Open Questions (Honest)</h3>
+      <ul>
+        <li>Are Polymarket weather markets liquid enough to absorb consistent order flow?</li>
+        <li>Does the latency edge survive after spreads and fees are accounted for?</li>
+        <li>Will market efficiency improve as prediction markets mature, eroding edge?</li>
+        <li>Are there enough weather contracts to diversify across, or is this seasonal?</li>
+        <li>Can the system distinguish genuine forecast shifts from model noise?</li>
+        <li>How does the system perform in low-volatility weather periods (clear skies for weeks)?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="econ-note fade-in">
+    <strong>The thesis is testable.</strong> Paper trading with conservative fills gives a realistic P&L
+    trajectory without risking capital. The backtest engine replays historical data with the same
+    strategy and risk rules. If the numbers work in paper, the path to live is a single config flag.
+    If they don't, the strategy gets refined or replaced &mdash; with zero capital lost.
+  </div>
+</section>
+
+<!-- ────────── ROADMAP ────────── -->
+<div class="divider"></div>
+<section id="roadmap">
+  <div class="section-header fade-in">
+    <div class="section-label">// 07 &mdash; roadmap</div>
+    <h2>Development Phases</h2>
+    <p class="section-desc">
+      The codebase is structured and production-ready. The core framework is built.
+      What remains is wiring the logic and validating the thesis.
+    </p>
+  </div>
+
+  <div class="roadmap-phases fade-in">
+    <div class="phase-card phase-current">
+      <div class="phase-label">Phase 1 &mdash; Current</div>
+      <h3>Foundation &amp; Paper Trading</h3>
+      <ul>
+        <li>Complete adapter integrations (API clients)</li>
+        <li>Wire LatencyHunterV1 fair-probability formula</li>
+        <li>Implement risk manager rule enforcement</li>
+        <li>Paper executor with conservative fills</li>
+        <li>Run continuous paper trading &amp; collect data</li>
+      </ul>
+    </div>
+
+    <div class="phase-card phase-next">
+      <div class="phase-label">Phase 2 &mdash; Validation</div>
+      <h3>Backtest &amp; Refinement</h3>
+      <ul>
+        <li>Backtest replay engine over historical data</li>
+        <li>Analyze win rate, drawdown, Sharpe ratio</li>
+        <li>Tune thresholds (edge, confidence, spread)</li>
+        <li>Add notification pipeline (Slack, email)</li>
+        <li>Deploy to VPS with monitoring</li>
+      </ul>
+    </div>
+
+    <div class="phase-card phase-future">
+      <div class="phase-label">Phase 3 &mdash; Scale</div>
+      <h3>Live Trading &amp; Expansion</h3>
+      <ul>
+        <li>Enable live execution (Polymarket CLOB auth)</li>
+        <li>Gradual position sizing ramp-up</li>
+        <li>Additional strategies beyond latency hunting</li>
+        <li>Multi-market expansion (beyond weather)</li>
+        <li>Real-time dashboard for monitoring</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── FOOTER ────────── -->
+<footer>
+  <p>polyweather.sys &mdash; weather-informed prediction market trading</p>
+  <div class="footer-links">
+    <a href="#">Python 3.11</a>
+    <a href="#">FastAPI</a>
+    <a href="#">PostgreSQL</a>
+    <a href="#">Docker</a>
+  </div>
+</footer>
+
+<!-- ── SCROLL ANIMATION ── -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
