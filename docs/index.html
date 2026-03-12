@@ -716,6 +716,172 @@
     .phase-next li::before { background: var(--accent-cyan); }
     .phase-future li::before { background: var(--accent-emerald); }
 
+    /* ── PROGRESS ── */
+    .progress-overview {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .progress-ring-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .progress-ring {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .progress-ring svg {
+      transform: rotate(-90deg);
+      width: 100px;
+      height: 100px;
+    }
+
+    .progress-ring .ring-bg {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 6;
+    }
+
+    .progress-ring .ring-fill {
+      fill: none;
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.5s ease;
+    }
+
+    .progress-ring .ring-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .progress-ring-card h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .progress-ring-card .ring-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .progress-modules {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .module-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+
+    .module-group h4 {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .module-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(42,53,80,0.4);
+    }
+
+    .module-row:last-child { border-bottom: none; }
+
+    .module-name {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .module-status {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-done {
+      background: rgba(16,185,129,0.12);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16,185,129,0.2);
+    }
+
+    .status-stubbed {
+      background: rgba(245,158,11,0.1);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+
+    .status-planned {
+      background: rgba(100,116,139,0.1);
+      color: var(--text-muted);
+      border: 1px solid rgba(100,116,139,0.2);
+    }
+
+    .progress-legend {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+
+    .legend-dot.green { background: var(--accent-emerald); }
+    .legend-dot.amber { background: var(--accent-amber); }
+    .legend-dot.gray { background: var(--text-muted); }
+
+    @media (max-width: 768px) {
+      .progress-overview { grid-template-columns: 1fr; }
+      .progress-modules { grid-template-columns: 1fr; }
+    }
+
     /* ── FOOTER ── */
     footer {
       padding: 4rem 2rem;
@@ -790,6 +956,7 @@
       <li><a href="#thesis">Thesis</a></li>
       <li><a href="#pipeline">Pipeline</a></li>
       <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#progress">Progress</a></li>
       <li><a href="#risk">Risk</a></li>
       <li><a href="#automation">Automation</a></li>
       <li><a href="#economics">Economics</a></li>
@@ -1086,11 +1253,252 @@
   </div>
 </section>
 
+<!-- ────────── PROGRESS ────────── -->
+<div class="divider"></div>
+<section id="progress">
+  <div class="section-header fade-in">
+    <div class="section-label">// 04 &mdash; build progress</div>
+    <h2>Where We Are</h2>
+    <p class="section-desc">
+      The production skeleton is fully built &mdash; database, schemas, config, enums, API structure,
+      Docker infrastructure. Business logic is scaffolded and ready to wire. Last updated March 2026.
+    </p>
+  </div>
+
+  <div class="progress-overview fade-in">
+    <div class="progress-ring-card">
+      <div class="progress-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="ring-fill" cx="50" cy="50" r="42"
+            stroke="var(--accent-emerald)"
+            stroke-dasharray="264"
+            stroke-dashoffset="0"/>
+        </svg>
+        <div class="ring-text" style="color: var(--accent-emerald)">100%</div>
+      </div>
+      <h4>Infrastructure</h4>
+      <div class="ring-sub">DB, Config, Schemas, Docker</div>
+    </div>
+
+    <div class="progress-ring-card">
+      <div class="progress-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="ring-fill" cx="50" cy="50" r="42"
+            stroke="var(--accent-amber)"
+            stroke-dasharray="264"
+            stroke-dashoffset="211"/>
+        </svg>
+        <div class="ring-text" style="color: var(--accent-amber)">20%</div>
+      </div>
+      <h4>Business Logic</h4>
+      <div class="ring-sub">Services, Adapters, Strategy</div>
+    </div>
+
+    <div class="progress-ring-card">
+      <div class="progress-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="ring-fill" cx="50" cy="50" r="42"
+            stroke="var(--text-muted)"
+            stroke-dasharray="264"
+            stroke-dashoffset="264"/>
+        </svg>
+        <div class="ring-text" style="color: var(--text-muted)">0%</div>
+      </div>
+      <h4>Validation</h4>
+      <div class="ring-sub">Backtest, Paper Trading, Tuning</div>
+    </div>
+  </div>
+
+  <div class="progress-modules fade-in">
+    <div class="module-group">
+      <h4>Core Infrastructure</h4>
+      <div class="module-row">
+        <span class="module-name">db/models.py</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">db/session.py</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">core/config.py</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">core/enums.py</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">core/constants.py</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">schemas/*</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">Dockerfile + Compose</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">Alembic migrations</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+    </div>
+
+    <div class="module-group">
+      <h4>API Layer</h4>
+      <div class="module-row">
+        <span class="module-name">api/main.py</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">routes_health.py</span>
+        <span class="module-status status-done">complete</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">routes_markets.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">routes_signals.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">routes_positions.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">routes_reports.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+    </div>
+
+    <div class="module-group">
+      <h4>Adapters (External APIs)</h4>
+      <div class="module-row">
+        <span class="module-name">openmeteo_client.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">noaa_client.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">polymarket_client.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">polymarket_ws.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">notifications.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+    </div>
+
+    <div class="module-group">
+      <h4>Services &amp; Strategy</h4>
+      <div class="module-row">
+        <span class="module-name">signal_engine.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">latency_hunter_v1.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">risk_manager.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">paper_executor.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">forecast_poller.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">market_scanner.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">pnl_engine.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">live_executor.py</span>
+        <span class="module-status status-planned">phase 3</span>
+      </div>
+    </div>
+
+    <div class="module-group">
+      <h4>Jobs (Automation)</h4>
+      <div class="module-row">
+        <span class="module-name">run_market_scan.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">run_forecast_poll.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">run_signal_loop.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">run_paper_trader.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">run_reports.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+    </div>
+
+    <div class="module-group">
+      <h4>Backtest Framework</h4>
+      <div class="module-row">
+        <span class="module-name">replay_engine.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">fill_simulator.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+      <div class="module-row">
+        <span class="module-name">metrics.py</span>
+        <span class="module-status status-stubbed">scaffolded</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-legend fade-in">
+    <div class="legend-item">
+      <div class="legend-dot green"></div>
+      <span>Complete &mdash; production-ready implementation</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot amber"></div>
+      <span>Scaffolded &mdash; interfaces defined, logic pending</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot gray"></div>
+      <span>Planned &mdash; for a future phase</span>
+    </div>
+  </div>
+</section>
+
 <!-- ────────── RISK ────────── -->
 <div class="divider"></div>
 <section id="risk">
   <div class="section-header fade-in">
-    <div class="section-label">// 04 &mdash; risk management</div>
+    <div class="section-label">// 05 &mdash; risk management</div>
     <h2>Conservative by Default</h2>
     <p class="section-desc">
       Every signal passes through the risk gate before execution. Five rule categories,
@@ -1169,7 +1577,7 @@
 <div class="divider"></div>
 <section id="automation">
   <div class="section-header fade-in">
-    <div class="section-label">// 05 &mdash; automation</div>
+    <div class="section-label">// 06 &mdash; automation</div>
     <h2>Runs Itself</h2>
     <p class="section-desc">
       Five independent job loops, containerized with Docker Compose, orchestrated by cron
@@ -1229,7 +1637,7 @@
 <div class="divider"></div>
 <section id="economics">
   <div class="section-header fade-in">
-    <div class="section-label">// 06 &mdash; economics</div>
+    <div class="section-label">// 07 &mdash; economics</div>
     <h2>Path to Passive Income</h2>
     <p class="section-desc">
       The system is designed to run autonomously once validated. Here's the honest breakdown
@@ -1276,50 +1684,62 @@
 <div class="divider"></div>
 <section id="roadmap">
   <div class="section-header fade-in">
-    <div class="section-label">// 07 &mdash; roadmap</div>
+    <div class="section-label">// 08 &mdash; roadmap</div>
     <h2>Development Phases</h2>
     <p class="section-desc">
-      The codebase is structured and production-ready. The core framework is built.
-      What remains is wiring the logic and validating the thesis.
+      Infrastructure is done. We're in Phase 1 &mdash; wiring the business logic into the
+      scaffolded framework. The skeleton is production-grade; what remains is connecting
+      external APIs and implementing the core trading loop.
     </p>
   </div>
 
   <div class="roadmap-phases fade-in">
     <div class="phase-card phase-current">
-      <div class="phase-label">Phase 1 &mdash; Current</div>
-      <h3>Foundation &amp; Paper Trading</h3>
+      <div class="phase-label">Phase 0 &mdash; Done</div>
+      <h3>Skeleton &amp; Infrastructure</h3>
       <ul>
-        <li>Complete adapter integrations (API clients)</li>
-        <li>Wire LatencyHunterV1 fair-probability formula</li>
-        <li>Implement risk manager rule enforcement</li>
+        <li style="text-decoration: line-through; opacity: 0.6;">Database schema &amp; ORM models (11 tables)</li>
+        <li style="text-decoration: line-through; opacity: 0.6;">Pydantic v2 schemas for all entities</li>
+        <li style="text-decoration: line-through; opacity: 0.6;">Environment config with safe defaults</li>
+        <li style="text-decoration: line-through; opacity: 0.6;">Enums, constants, structured logging</li>
+        <li style="text-decoration: line-through; opacity: 0.6;">FastAPI app with health check</li>
+        <li style="text-decoration: line-through; opacity: 0.6;">Docker Compose + Alembic migrations</li>
+        <li style="text-decoration: line-through; opacity: 0.6;">All service/adapter/job interfaces scaffolded</li>
+      </ul>
+    </div>
+
+    <div class="phase-card phase-current">
+      <div class="phase-label">Phase 1 &mdash; In Progress</div>
+      <h3>Wire the Logic</h3>
+      <ul>
+        <li>OpenMeteo + NOAA adapter implementations</li>
+        <li>Polymarket CLOB client + WebSocket feed</li>
+        <li>LatencyHunterV1 fair-probability formula</li>
+        <li>Risk manager rule enforcement</li>
         <li>Paper executor with conservative fills</li>
-        <li>Run continuous paper trading &amp; collect data</li>
+        <li>Job loop orchestration</li>
+        <li>API route DB queries</li>
       </ul>
     </div>
 
     <div class="phase-card phase-next">
-      <div class="phase-label">Phase 2 &mdash; Validation</div>
-      <h3>Backtest &amp; Refinement</h3>
+      <div class="phase-label">Phase 2 &mdash; Next</div>
+      <h3>Validate &amp; Deploy</h3>
       <ul>
-        <li>Backtest replay engine over historical data</li>
+        <li>Backtest replay over historical data</li>
         <li>Analyze win rate, drawdown, Sharpe ratio</li>
         <li>Tune thresholds (edge, confidence, spread)</li>
-        <li>Add notification pipeline (Slack, email)</li>
         <li>Deploy to VPS with monitoring</li>
+        <li>Notifications (Slack, email)</li>
+        <li>Continuous paper trading &amp; data collection</li>
       </ul>
     </div>
+  </div>
 
-    <div class="phase-card phase-future">
-      <div class="phase-label">Phase 3 &mdash; Scale</div>
-      <h3>Live Trading &amp; Expansion</h3>
-      <ul>
-        <li>Enable live execution (Polymarket CLOB auth)</li>
-        <li>Gradual position sizing ramp-up</li>
-        <li>Additional strategies beyond latency hunting</li>
-        <li>Multi-market expansion (beyond weather)</li>
-        <li>Real-time dashboard for monitoring</li>
-      </ul>
-    </div>
+  <div class="econ-note fade-in" style="margin-top: 2rem;">
+    <strong>Phase 3 (future):</strong> Live trading enablement, gradual position sizing ramp-up,
+    additional strategies beyond latency hunting, multi-market expansion beyond weather,
+    and a real-time monitoring dashboard.
   </div>
 </section>
 
