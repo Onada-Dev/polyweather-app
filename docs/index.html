@@ -882,6 +882,167 @@
       .progress-modules { grid-template-columns: 1fr; }
     }
 
+    /* ── ROI TABLE ── */
+    .roi-table-wrap {
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+
+    .roi-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .roi-table thead th {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 0.75rem 1rem;
+      text-align: right;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .roi-table thead th:first-child {
+      text-align: left;
+    }
+
+    .roi-table tbody td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(42,53,80,0.4);
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .roi-table tbody td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .roi-table tbody tr:hover {
+      background: rgba(59,130,246,0.04);
+    }
+
+    .roi-table .col-conservative { color: var(--text-secondary); }
+    .roi-table .col-moderate { color: var(--accent-cyan); }
+    .roi-table .col-aggressive { color: var(--accent-emerald); }
+
+    .roi-table thead .col-moderate { color: var(--accent-cyan); }
+    .roi-table thead .col-aggressive { color: var(--accent-emerald); }
+
+    .roi-assumptions {
+      margin-top: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .roi-assumptions strong {
+      color: var(--text-secondary);
+    }
+
+    /* ── SCALING PATHS ── */
+    .scaling-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .scale-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .scale-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .scale-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .scale-card:nth-child(1)::before { background: var(--accent-blue); }
+    .scale-card:nth-child(2)::before { background: var(--accent-cyan); }
+    .scale-card:nth-child(3)::before { background: var(--accent-emerald); }
+
+    .scale-card .scale-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .scale-card:nth-child(1) .scale-label { color: var(--accent-blue); }
+    .scale-card:nth-child(2) .scale-label { color: var(--accent-cyan); }
+    .scale-card:nth-child(3) .scale-label { color: var(--accent-emerald); }
+
+    .scale-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .scale-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .scale-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .scale-meta-item {
+      padding: 0.6rem;
+      background: rgba(10,14,23,0.5);
+      border-radius: 6px;
+    }
+
+    .scale-meta-item .meta-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .scale-meta-item .meta-value {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 768px) {
+      .scaling-grid { grid-template-columns: 1fr; }
+    }
+
     /* ── FOOTER ── */
     footer {
       padding: 4rem 2rem;
@@ -960,6 +1121,7 @@
       <li><a href="#risk">Risk</a></li>
       <li><a href="#automation">Automation</a></li>
       <li><a href="#economics">Economics</a></li>
+      <li><a href="#scaling">Scaling</a></li>
       <li><a href="#roadmap">Roadmap</a></li>
     </ul>
   </div>
@@ -1678,13 +1840,198 @@
     strategy and risk rules. If the numbers work in paper, the path to live is a single config flag.
     If they don't, the strategy gets refined or replaced &mdash; with zero capital lost.
   </div>
+
+  <!-- ROI PROJECTIONS -->
+  <div style="margin-top: 3rem;" class="fade-in">
+    <h3 style="font-size: 1.4rem; margin-bottom: 0.5rem;">ROI Projections</h3>
+    <p class="section-desc" style="margin-bottom: 1.5rem;">
+      Annualized returns at three edge scenarios. Conservative assumes modest, consistent edge
+      after fees. Moderate reflects validated strategy with tuned parameters. Aggressive is the
+      ceiling &mdash; high win rate across multiple active markets.
+    </p>
+
+    <div class="roi-table-wrap">
+      <table class="roi-table">
+        <thead>
+          <tr>
+            <th>Capital Deployed</th>
+            <th class="col-conservative">Conservative<br>~2%/mo</th>
+            <th class="col-moderate">Moderate<br>~5%/mo</th>
+            <th class="col-aggressive">Aggressive<br>~10%/mo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>$1,000</td>
+            <td class="col-conservative">$240/yr</td>
+            <td class="col-moderate">$600/yr</td>
+            <td class="col-aggressive">$1,200/yr</td>
+          </tr>
+          <tr>
+            <td>$5,000</td>
+            <td class="col-conservative">$1,200/yr</td>
+            <td class="col-moderate">$3,000/yr</td>
+            <td class="col-aggressive">$6,000/yr</td>
+          </tr>
+          <tr>
+            <td>$10,000</td>
+            <td class="col-conservative">$2,400/yr</td>
+            <td class="col-moderate">$6,000/yr</td>
+            <td class="col-aggressive">$12,000/yr</td>
+          </tr>
+          <tr>
+            <td>$25,000</td>
+            <td class="col-conservative">$6,000/yr</td>
+            <td class="col-moderate">$15,000/yr</td>
+            <td class="col-aggressive">$30,000/yr</td>
+          </tr>
+          <tr>
+            <td>$50,000</td>
+            <td class="col-conservative">$12,000/yr</td>
+            <td class="col-moderate">$30,000/yr</td>
+            <td class="col-aggressive">$60,000/yr</td>
+          </tr>
+          <tr>
+            <td>$100,000</td>
+            <td class="col-conservative">$24,000/yr</td>
+            <td class="col-moderate">$60,000/yr</td>
+            <td class="col-aggressive">$120,000/yr</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="roi-assumptions">
+      <strong>Assumptions:</strong> Returns are simple (non-compounded) annualized projections.
+      Conservative scenario assumes ~55% win rate with 100-150 bps avg edge after spreads and fees.
+      Moderate assumes ~62% win rate with 200+ bps avg edge across 5-10 concurrent markets.
+      Aggressive assumes ~68% win rate with high market availability and refined strategy tuning.
+      All scenarios assume weather markets remain liquid and the system runs 24/7 unattended.
+      <strong>These are projections, not guarantees</strong> &mdash; actual returns depend on market conditions,
+      edge persistence, and strategy performance validated through paper trading and backtests.
+    </div>
+  </div>
+</section>
+
+<!-- ────────── SCALING ────────── -->
+<div class="divider"></div>
+<section id="scaling">
+  <div class="section-header fade-in">
+    <div class="section-label">// 08 &mdash; scaling to $200k</div>
+    <h2>Three Paths to $200k/Year</h2>
+    <p class="section-desc">
+      PolyWeather is designed as a building block. The same architecture &mdash; data adapters,
+      signal engine, risk manager, executor &mdash; can scale in multiple directions. Here are
+      three realistic paths to meaningful passive income.
+    </p>
+  </div>
+
+  <div class="scaling-grid fade-in">
+    <div class="scale-card">
+      <div class="scale-label">Path A</div>
+      <h3>Capital Scale + Compounding</h3>
+      <p>
+        Start small, validate edge, reinvest profits. At a moderate 5% monthly return,
+        $25k grows to $200k+ annual income within 18-24 months through compounding
+        and incremental capital additions. The system's risk limits scale proportionally
+        &mdash; $250 daily loss cap at $5k becomes $2,500 at $50k. Same architecture,
+        bigger numbers.
+      </p>
+      <div class="scale-meta">
+        <div class="scale-meta-item">
+          <div class="meta-label">Starting Capital</div>
+          <div class="meta-value">$25-50k</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Timeline</div>
+          <div class="meta-value">18-24 mo</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Target Capital</div>
+          <div class="meta-value">$170-330k</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Key Risk</div>
+          <div class="meta-value">Liquidity ceiling</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scale-card">
+      <div class="scale-label">Path B</div>
+      <h3>Multi-Market Expansion</h3>
+      <p>
+        The LatencyHunter framework is market-agnostic. Weather is the first vertical, but
+        the same architecture extends to sports (injury reports vs. odds), politics (polling
+        data vs. markets), crypto events (on-chain data vs. outcome markets), and economics
+        (employment data vs. macro contracts). Each vertical is a new adapter + strategy plugin.
+        Run 5-10 strategies in parallel across uncorrelated markets.
+      </p>
+      <div class="scale-meta">
+        <div class="scale-meta-item">
+          <div class="meta-label">Starting Capital</div>
+          <div class="meta-value">$10-25k</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Timeline</div>
+          <div class="meta-value">12-18 mo</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Strategies</div>
+          <div class="meta-value">5-10 parallel</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Key Risk</div>
+          <div class="meta-value">Dev bandwidth</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scale-card">
+      <div class="scale-label">Path C</div>
+      <h3>Signal Service + Managed Fund</h3>
+      <p>
+        Package validated signals as a subscription product. Charge $99-299/mo per subscriber
+        for real-time trade signals with transparent track records. At 100 subscribers,
+        that's $120-360k/yr in recurring revenue before any trading profits.
+        Alternatively, structure as a small fund managing pooled capital with a 2/20 fee
+        model. Proven track record from paper/live trading becomes the sales pitch.
+      </p>
+      <div class="scale-meta">
+        <div class="scale-meta-item">
+          <div class="meta-label">Starting Capital</div>
+          <div class="meta-value">$5-10k</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Timeline</div>
+          <div class="meta-value">12-24 mo</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Revenue Model</div>
+          <div class="meta-value">SaaS + trading</div>
+        </div>
+        <div class="scale-meta-item">
+          <div class="meta-label">Key Risk</div>
+          <div class="meta-value">Regulatory / legal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="econ-note fade-in" style="margin-top: 2rem;">
+    <strong>The compounding effect matters.</strong> These paths aren't mutually exclusive. The most
+    realistic trajectory combines Path A (start with capital scaling on weather) with Path B
+    (add market verticals as each one validates). Path C becomes viable once you have 6+ months
+    of verified track record. The system architecture supports all three simultaneously &mdash;
+    each strategy runs as an independent loop against the same infrastructure.
+  </div>
 </section>
 
 <!-- ────────── ROADMAP ────────── -->
 <div class="divider"></div>
 <section id="roadmap">
   <div class="section-header fade-in">
-    <div class="section-label">// 08 &mdash; roadmap</div>
+    <div class="section-label">// 09 &mdash; roadmap</div>
     <h2>Development Phases</h2>
     <p class="section-desc">
       Infrastructure is done. We're in Phase 1 &mdash; wiring the business logic into the
